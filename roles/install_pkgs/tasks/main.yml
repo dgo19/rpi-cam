@@ -1,0 +1,17 @@
+---
+- name: install additional packages
+  become: yes
+  become_user: root
+  apt:
+    pkg:
+    - tcpdump
+    - sysstat
+    - iotop
+    - sudo
+    - bash
+    - util-linux
+    - file
+    - git
+    - libcamera0
+    - libfreetype6
+
