@@ -14,7 +14,8 @@
       shell: /bin/false
       create_home: true
       home: /home/mediamtx
-      groups: mediamtx
+      group: mediamtx
+      groups: video
   
   - name: "create /opt/mediamtx directory"
     ansible.builtin.file:
@@ -34,13 +35,13 @@
     register: mediamtx_bin
   
   - name: "check mediamtx version"
-    shell: /opt/mediamtx/mediamtx
+    shell: "/opt/mediamtx/mediamtx --version"
     register: mediamtx_bin_version
     changed_when: 0
     when: mediamtx_bin.stat.exists == true
 
 - name: "download new mediamtx version"
-  when: (mediamtx_bin.stat.exists == false) or ((mediamtx_bin.stat.exists == true) and (mediamtx_bin_version != mediamtx_version))
+  when: (mediamtx_bin.stat.exists == false) or ((mediamtx_bin.stat.exists == true) and (mediamtx_bin_version.stdout != mediamtx_version))
   block:
   - name: create tempdir for download
     tempfile:
@@ -48,18 +49,64 @@
       suffix: mediamtx
     register: tempdir
 
-  - name: download helm archive
+  - name: download mediamtx archive
     get_url:
       url: "https://github.com/bluenviron/mediamtx/releases/download/{{ mediamtx_version }}/mediamtx_{{ mediamtx_version }}_linux_arm64v8.tar.gz"
       dest: "{{ tempdir.path }}/mediamtx.tar.gz"
       mode: "0640"
 
   - name: unarchive mediamtx download
-    become: yes
-    become_user: root
     unarchive:
       src: "{{ tempdir.path }}/mediamtx.tar.gz"
+      dest: "{{ tempdir.path }}/"
+
+  - name: "copy new mediamtx files"
+    become: yes
+    become_user: root
+    ansible.builtin.copy:
+      src: "{{ tempdir.path }}/{{ item }}"
       dest: "/opt/mediamtx"
       owner: root
       group: root
+      mode: preserve
+    loop:
+      - mediamtx
+      - LICENSE
+
+  - name: "copy mediamtx config file if it does not exist"
+    become: yes
+    become_user: root
+    ansible.builtin.copy:
+      src: "{{ tempdir.path }}/mediamtx.yml"
+      dest: "/opt/mediamtx/mediamtx.yml"
+      owner: root
+      group: root
+      force: false
+
+  always:
+  - name: remove tempdir
+    file:
+      path: "{{ tempdir.path }}"
+      state: absent
+    when: tempdir.path is defined
+
+- name: "systemd setup for mediamtx"
+  block:
+  - name: "create systemd unit file for mediamtx"
+    become: yes
+    become_user: root
+    ansible.builtin.copy:
+      src: "mediamtx.service"
+      dest: "/etc/systemd/system/mediamtx.service"
+    notify:
+    - systemd daemon-reload
+
+  - name: "ensure mediamtx is running"
+    become: yes
+    become_user: root
+    ansible.builtin.systemd_service:
+      name: "mediamtx.service"
+      state: started
+      enabled: true
+      masked: no
 

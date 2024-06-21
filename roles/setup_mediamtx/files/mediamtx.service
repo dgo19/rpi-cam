@@ -1,0 +1,13 @@
+[Unit]
+Description=MediaMTX
+After=syslog.target network.target
+
+[Service]
+User=mediamtx
+PIDFile=/run/mediamtx/mediamtx.pid
+WorkingDirectory=/opt/mediamtx
+ExecStart=/opt/mediamtx/mediamtx
+StandardOutput=syslog
+
+[Install]
+WantedBy=multi-user.target
