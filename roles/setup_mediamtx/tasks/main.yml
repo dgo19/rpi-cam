@@ -50,7 +50,7 @@
 
   - name: download helm archive
     get_url:
-      url: "https://github.com/bluenviron/mediamtx/releases/download/{{ mediamtx_verion }}/mediamtx_{{ mediamtx_verion }}_linux_arm64v8.tar.gz"
+      url: "https://github.com/bluenviron/mediamtx/releases/download/{{ mediamtx_version }}/mediamtx_{{ mediamtx_version }}_linux_arm64v8.tar.gz"
       dest: "{{ tempdir.path }}/mediamtx.tar.gz"
       mode: "0640"
 
