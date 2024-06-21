@@ -1,0 +1,65 @@
+---
+- name: "create group, user, directory"
+  become: true
+  become_user: root
+  block:
+  - name: "create mediamtx group"
+    ansible.builtin.group:
+      name: mediamtx
+      state: present
+  
+  - name: "create mediamtx user"
+    ansible.builtin.user:
+      name: mediamtx
+      shell: /bin/false
+      create_home: true
+      home: /home/mediamtx
+      groups: mediamtx
+  
+  - name: "create /opt/mediamtx directory"
+    ansible.builtin.file:
+      path: /opt/mediamtx
+      state: directory
+      mode: 0750
+      owner: root
+      group: mediamtx
+
+- name: "check mediamtx"
+  become: true
+  become_user: mediamtx
+  block:
+  - name: "check mediamtx install status"
+    ansible.builtin.stat:
+      path: /opt/mediamtx/mediamtx
+    register: mediamtx_bin
+  
+  - name: "check mediamtx version"
+    shell: /opt/mediamtx/mediamtx
+    register: mediamtx_bin_version
+    changed_when: 0
+    when: mediamtx_bin.stat.exists == true
+
+- name: "download new mediamtx version"
+  when: (mediamtx_bin.stat.exists == false) or ((mediamtx_bin.stat.exists == true) and (mediamtx_bin_version != mediamtx_version))
+  block:
+  - name: create tempdir for download
+    tempfile:
+      state: directory
+      suffix: mediamtx
+    register: tempdir
+
+  - name: download helm archive
+    get_url:
+      url: "https://github.com/bluenviron/mediamtx/releases/download/{{ mediamtx_verion }}/mediamtx_{{ mediamtx_verion }}_linux_arm64v8.tar.gz"
+      dest: "{{ tempdir.path }}/mediamtx.tar.gz"
+      mode: "0640"
+
+  - name: unarchive mediamtx download
+    become: yes
+    become_user: root
+    unarchive:
+      src: "{{ tempdir.path }}/mediamtx.tar.gz"
+      dest: "/opt/mediamtx"
+      owner: root
+      group: root
+
