@@ -10,7 +10,7 @@ cd rpi-cam
 ```
 update software
 ```
-ansible-playbook -D update_raspbian.yml
+ansible-playbook -D upgrade_raspbian.yml
 ```
 setup mediamtx and camera
 ```
