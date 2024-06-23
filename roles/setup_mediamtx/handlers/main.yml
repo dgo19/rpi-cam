@@ -5,3 +5,21 @@
   ansible.builtin.systemd_service:
     daemon_reload: true
 
+- name: "mediamtx initial config"
+  become: yes
+  become_user: root
+  ansible.builtin.blockinfile:
+    block: "{{ lookup('ansible.builtin.file', 'cam-mediamtx.yml') }}"
+    path: "/opt/mediamtx/mediamtx.yml"
+    insertafter: "^paths:"
+    backup: no
+  notify:
+    - restart mediamtx
+
+- name: "restart mediamtx"
+  become: yes
+  become_user: root
+  ansible.builtin.systemd_service:
+    name: "mediamtx.service"
+    state: restarted
+

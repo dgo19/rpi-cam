@@ -1,0 +1,28 @@
+  cam:
+    source: rpiCamera
+    # width of frames
+    rpiCameraWidth: 1920
+    # height of frames
+    rpiCameraHeight: 1080
+    # flip horizontally
+    rpiCameraHFlip: false
+    # flip vertically
+    rpiCameraVFlip: false
+    rpiCameraBitrate: 10000000
+    # auto-white-balance mode.
+    # values: auto, incandescent, tungsten, fluorescent, indoor, daylight, cloudy, custom
+    rpiCameraAWB: "cloudy"
+    # metering mode of the AEC/AGC algorithm.
+    # values: centre, spot, matrix, custom
+    rpiCameraMetering: "spot"
+    # Autofocus mode
+    # values: auto, manual, continuous
+    rpiCameraAfMode: manual
+    # Lens position (for manual autofocus only), will be set to focus to a specific distance
+    # calculated by the following formula: d = 1 / value
+    # Examples: 0 moves the lens to infinity.
+    #           0.5 moves the lens to focus on objects 2m away.
+    #           2 moves the lens to focus on objects 50cm away.
+    rpiCameraLensPosition: 2.0
+    # fixed shutter speed, in microseconds.
+    #rpiCameraShutter: 3000

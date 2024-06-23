@@ -72,6 +72,8 @@
     loop:
       - mediamtx
       - LICENSE
+    notify:
+    - restart mediamtx
 
   - name: "copy mediamtx config file if it does not exist"
     become: yes
@@ -82,6 +84,8 @@
       owner: root
       group: root
       force: false
+    notify:
+    - mediamtx initial config
 
   always:
   - name: remove tempdir
