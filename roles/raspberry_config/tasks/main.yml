@@ -1,0 +1,12 @@
+---
+- name: "set gpu_mem in config.txt"
+  become: yes
+  become_user: root
+  ansible.builtin.ini_file:
+    path: "/boot/firmware/config.txt"
+    section: "all"
+    option: "gpu_mem"
+    value: "64"
+    no_extra_spaces: yes
+    backup: false
+
