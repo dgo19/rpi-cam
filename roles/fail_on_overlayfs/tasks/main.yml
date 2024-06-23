@@ -1,0 +1,6 @@
+---
+- name: "fail when running on read-only filesystem"
+  ansible.builtin.fail:
+    msg: "detected overlayfs - check for read-only root filesystem."
+  when: ansible_cmdline.overlayroot is defined
+
