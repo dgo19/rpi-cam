@@ -87,6 +87,18 @@
     notify:
     - mediamtx initial config
 
+  - name: "copy imx708.json camera tuning file if it does not exist"
+    become: yes
+    become_user: root
+    ansible.builtin.copy:
+      src: "imx708.json"
+      dest: "/opt/mediamtx/imx708.json"
+      owner: root
+      group: root
+      force: false
+    notify:
+    - restart mediamtx
+
   always:
   - name: remove tempdir
     file:

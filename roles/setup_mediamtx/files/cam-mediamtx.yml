@@ -11,10 +11,13 @@
     rpiCameraBitrate: 10000000
     # auto-white-balance mode.
     # values: auto, incandescent, tungsten, fluorescent, indoor, daylight, cloudy, custom
-    rpiCameraAWB: "cloudy"
+    rpiCameraAWB: "custom"
     # metering mode of the AEC/AGC algorithm.
     # values: centre, spot, matrix, custom
-    rpiCameraMetering: "spot"
+    rpiCameraMetering: "custom"
+    # exposure mode.
+    # values: normal, short, long, custom
+    rpiCameraExposure: custom
     # Autofocus mode
     # values: auto, manual, continuous
     rpiCameraAfMode: manual
@@ -26,3 +29,5 @@
     rpiCameraLensPosition: 2.0
     # fixed shutter speed, in microseconds.
     #rpiCameraShutter: 3000
+    # tuning file
+    rpiCameraTuningFile: imx708.json
