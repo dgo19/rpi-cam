@@ -18,6 +18,8 @@
     # exposure mode.
     # values: normal, short, long, custom
     rpiCameraExposure: custom
+    # fixed gain
+    rpiCameraGain: 0
     # Autofocus mode
     # values: auto, manual, continuous
     rpiCameraAfMode: manual
@@ -26,7 +28,7 @@
     # Examples: 0 moves the lens to infinity.
     #           0.5 moves the lens to focus on objects 2m away.
     #           2 moves the lens to focus on objects 50cm away.
-    rpiCameraLensPosition: 2.0
+    rpiCameraLensPosition: 4.0
     # fixed shutter speed, in microseconds.
     #rpiCameraShutter: 3000
     # tuning file
