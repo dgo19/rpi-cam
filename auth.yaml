@@ -1,0 +1,6 @@
+- user: admin
+  pass: lala
+  ips: []
+  permissions:
+  - action: api
+
