@@ -5,4 +5,5 @@
   apt:
     upgrade: dist
     update_cache: yes
+    dpkg_options: "force-confdef,force-confold,threads-max=1"
 
